@@ -1,6 +1,4 @@
-#  Inventario Digital de Materiales - Liceo Infantil "Expresiones Pedagógicas"
-
-
+# Inventario Digital de Materiales - Liceo Infantil "Expresiones Pedagógicas"
 
 ## Tabla de Contenidos
 
@@ -18,7 +16,7 @@
 
 ## 📝 Descripción del Proyecto
 
-Este proyecto introduce un sistema de gestión de inventario digital para el Liceo Infantil "Expresiones Pedagógicas". Por primera vez, se centralizará y organizará el control de todos los materiales didácticos, de juego, de aseo y de oficina de manera electrónica. 
+Este proyecto introduce un sistema de gestión de inventario digital para el Liceo Infantil "Expresiones Pedagógicas". Por primera vez, se centralizará y organizará el control de todos los materiales didácticos, de juego, de aseo y de oficina de manera electrónica.
 
 ## 🎯 Objetivos
 
@@ -32,23 +30,24 @@ Este proyecto introduce un sistema de gestión de inventario digital para el Lic
 ## 🛠️ Stack Tecnológico
 
 ### Entorno de Desarrollo
+
 PyCharm: IDE utilizado para desarrollar, organizar y ejecutar el proyecto
 
 ### Backend
+
 Python 3.10+: Lenguaje principal
 FastAPI: Creación de la API
 MySQL: Base de datos relacional
 PyCharm: Entorno de desarrollo
 
 ### Librerías
+
 SQLAlchemy: Conexión a base de datos
 Uvicorn: Servidor para FastAPI
 
 ## 📁 Estructura del Proyecto
 
-```
-
-inventario-jardin/
+```inventario-jardin/
 │
 ├── app/
 │   ├── main.py              # Punto de entrada FastAPI
@@ -68,8 +67,7 @@ inventario-jardin/
 
 ```
 
-
-#  🔄 Flujo de Datos
+## 🔄Flujo de Datos
 
 Usuario (profesor/administrador) hace una petición
 La API en FastAPI recibe la solicitud
@@ -77,9 +75,7 @@ Se procesa la lógica en el módulo CRUD
 Se consulta o modifica la base de datos en MySQL
 Se devuelve una respuesta en formato JSON
 
-
-
-# 🗄️ Estructura de la Base de Datos
+## 🗄️Estructura de la Base de Datos
 
 ```env
 | Campo          | Tipo    | Descripción         |
@@ -93,32 +89,35 @@ Se devuelve una respuesta en formato JSON
 
 ```
 
-# 🚦 Estado por Fases
+## 🚦Estado por Fases
 
-### ✅ Fase 1: Base del sistema
+### ✅Fase 1: Base del sistema
+
 Creación de base de datos
 Conexión con MySQL
 Estructura del proyecto en Python
 
 ### 🔄 Fase 2: CRUD básico
+
 Crear productos
 Listar productos
 Actualizar productos
 Eliminar productos
 
 ### 🔮 Fase 3: Mejoras futuras
+
 Control de alertas (stock bajo)
 Reportes simples
 Interfaz gráfica (opcional)
 
-# 🔧 Instalación
+## 🔧 Instalación
+
 Requisitos
 Python 3.10+
 MySQL
 PyCharm
 
-```
-#Crear entorno virtual
+```#Crear entorno virtual
 python -m venv venv
 
 #Activar entorno
@@ -129,30 +128,28 @@ pip install -r requirements.txt
 
 ```
 
-# 🚀 Uso
-```
-Ejecutar el servidor:
+## 🚀 Uso
+
+```Ejecutar el servidor:
 
 uvicorn app.main:app --reload
 
 Abrir en navegador:
 ```
-http://127.0.0.1:8000/docs
 
+<http://127.0.0.1:8000/docs>
 
+## 📝 Notas Importantes
 
-# 📝 Notas Importantes
 Es un sistema básico, no necesita ser complejo
 Enfocado en aprendizaje y presentación
 Código organizado tipo proyecto real
 Ideal para subir a GitHub como evidencia académica
 
-# 👩‍💻 Autores
+## 👩‍💻 Autores
+
 Sandra Bibiana Casas Morales
 
-Karen Atehortúa 
+Karen Atehortúa
 
 Laura Delgado
-
-
-
