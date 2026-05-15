@@ -1,0 +1,29 @@
+@startuml InventarioDigitalLiceoCompleto
+
+left to right direction
+
+actor "Administrador/Profesor" as actor_admin
+
+rectangle "Sistema de Inventario Digital - Liceo" {
+    usecase "Registrar Nuevo Producto" as UC_REG_PROD
+    usecase "Listar Productos Existentes" as UC_LIST_PROD
+    usecase "Actualizar Producto Existente" as UC_ACT_PROD
+    usecase "Eliminar Producto Existente" as UC_DEL_PROD
+    usecase "Gestionar Inventario de Productos" as UC_GEST_PROD
+
+    usecase "Registrar Entrada de Productos" as UC_REG_ENTRADA
+    usecase "Registrar Salida de Productos" as UC_REG_SALIDA
+    usecase "Gestionar Alertas de Stock Bajo" as UC_ALERTAS
+
+    UC_GEST_PROD .> UC_REG_PROD : <<include>>
+    UC_GEST_PROD .> UC_LIST_PROD : <<include>>
+    UC_GEST_PROD .> UC_ACT_PROD : <<include>>
+    UC_GEST_PROD .> UC_DEL_PROD : <<include>>
+
+    actor_admin --> UC_GEST_PROD
+    actor_admin --> UC_REG_ENTRADA
+    actor_admin --> UC_REG_SALIDA
+    actor_admin --> UC_ALERTAS
+}
+
+@enduml
