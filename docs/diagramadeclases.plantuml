@@ -1,0 +1,72 @@
+
+@startuml
+
+' ===== Clases Principales =====
+
+class Usuario {
+    +id: int
+    +nombre: str
+    +rol: str
+    +correo: str
+    +contraseña: str
+    +registrarProducto()
+    +listarProductos()
+    +actualizarProducto()
+    +eliminarProducto()
+    +generarReporte()
+}
+
+class Producto {
+    +id: int
+    +nombre: str
+    +categoria: str
+    +cantidad: int
+    +precio: float
+    +fecha_registro: date
+    +actualizarStock(cantidad: int)
+}
+
+class Inventario {
+    +id: int
+    +listaProductos: List[Producto]
+    +registrarEntrada(producto: Producto, cantidad: int)
+    +registrarSalida(producto: Producto, cantidad: int)
+    +consultarStock(producto: Producto): int
+}
+
+class Alerta {
+    +id: int
+    +producto: Producto
+    +mensaje: str
+    +fecha_creacion: date
+    +enviarAlerta()
+}
+
+class Reporte {
+    +id: int
+    +fecha_generacion: date
+    +datos: dict
+    +generarReporte(): str
+}
+
+class Sistema {
+    +inventario: Inventario
+    +usuarios: List[Usuario]
+    +alertas: List[Alerta]
+    +reportes: List[Reporte]
+    +gestionarInventario()
+    +controlarAlertas()
+}
+
+' ===== Relaciones =====
+
+Usuario "1" --> "0..*" Producto : Gestiona
+Inventario "1" o-- "0..*" Producto : Contiene
+Inventario "1" --> "0..*" Alerta : Genera
+Usuario "1" --> "0..*" Reporte : Solicita
+Sistema "1" o-- "1" Inventario : Usa
+Sistema "1" o-- "0..*" Usuario : Registra
+Alerta "1" --> "1" Producto : Asociada a
+Reporte "1" --> "0..*" Producto : Incluye
+
+@enduml
