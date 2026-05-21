@@ -15,4 +15,4 @@ class Product(Base):
     fecha_registro: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
-    # esto viene funcionado o relacionado con diagrama de clase
+    # Esta parte la hicimos siguiendo el dibujo del diagrama de clases que nos pidió el profe

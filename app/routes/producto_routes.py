@@ -10,7 +10,7 @@ router = APIRouter(
     tags=["Productos"]
 )
 
-# Dependencia para obtener la sesión de la base de datos
+# Con esta función el programa se conecta a la base de datos de XAMPP cada vez que alguien pide algo
 def get_db():
     db = SessionLocal()
     try:

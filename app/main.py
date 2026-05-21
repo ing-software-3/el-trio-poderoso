@@ -14,5 +14,5 @@ def get_start():
         "estado": "Online"
     }
 
-# Incluimos las rutas del módulo de productos
+# Aquí le decimos a la aplicación que use todas las rutas que hicimos para los productos
 app.include_router(producto_routes.router)
