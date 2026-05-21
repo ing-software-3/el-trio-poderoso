@@ -1,31 +1,18 @@
-from fastapi import FastApi
-from pydantic import BaseModel
+from fastapi import FastAPI
+from app.routes import producto_routes
 
-app = FastApi()
-
-productos = [
-    {"id": 1, "producto": "Monitor", "precio": 5000},
-    {"id": 2, "producto": "Teclado", "precio": 5000},
-    {"id": 3, "producto": "Mouse", "precio": 5000},
-    {"id": 4, "producto": "Celular", "precio": 5000},
-]
-
-class Producto(BaseModel):
-    id: int
-    producto: str
-    precio: float
+app = FastAPI(
+    title="Sistema de Inventario - Liceo Infantil Expresiones Pedagógicas",
+    description="API para la gestión de materiales didácticos y de oficina"
+)
 
 @app.get("/")
 def get_start():
-    return {"clase": "sofware III"}
+    return {
+        "mensaje": "Bienvenido al Sistema de Inventario",
+        "institucion": "Liceo Infantil Expresiones Pedagógicas",
+        "estado": "Online"
+    }
 
-@app.get("/productos")
-def get_productos():
-    return {"codigo": 200, "data": productos}
-
-@app.get("/producto/{producto_id}")
-def get_producto (producto_id: int):
-    for producto in productos:
-        if producto["id"] == producto_id:
-            return {"codigo": 200, "data": producto}
-    raise HTTPException(status_code=404, detail={"codigo": 404, "mensaje": "Producto no encontrado"})
+# Incluimos las rutas del módulo de productos
+app.include_router(producto_routes.router)
