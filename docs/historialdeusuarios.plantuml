@@ -1,0 +1,48 @@
+@startuml InventarioDigitalLiceo_Combinado
+
+left to right direction
+
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam backgroundColor #FFFFFF
+skinparam usecaseBackgroundColor #F5F5F5
+skinparam usecaseBorderColor #333333
+skinparam arrowColor #333333
+
+' ===== Actores =====
+actor "Administrador/\nProfesor" as actor_admin
+actor "Sistema" as actor_sis
+
+rectangle "Historial de Usuarios" {
+
+    ' ===== Caso principal =====
+    usecase "Gestionar Inventario\nde Productos" as UC_GEST
+
+    ' ===== CRUD (de la compañera) =====
+    usecase "Registrar\nNuevo Producto" as UC_REG
+    usecase "Listar Productos\nExistentes" as UC_LIST
+    usecase "Actualizar Producto\nExistente" as UC_ACT
+    usecase "Eliminar Producto\nExistente" as UC_DEL
+
+    ' ===== Historiales adicionales (tuyos) =====
+    usecase "Recibir Alerta\nde Stock Bajo" as UC_ALERT
+    usecase "Generar\nReportes" as UC_REP
+    usecase "Consultar Stock\nDisponible" as UC_STOCK
+
+    ' ===== Relaciones del actor =====
+    actor_admin --> UC_GEST
+
+    ' ===== Include desde gestión =====
+    UC_GEST ..> UC_REG : <<include>>
+    UC_GEST ..> UC_LIST : <<include>>
+    UC_GEST ..> UC_ACT : <<include>>
+    UC_GEST ..> UC_DEL : <<include>>
+    UC_GEST ..> UC_STOCK : <<include>>
+    UC_GEST ..> UC_REP : <<include>>
+
+    ' ===== Relaciones del sistema =====
+    actor_sis --> UC_ALERT
+    UC_ALERT ..> UC_STOCK : <<include>>
+}
+
+@enduml
