@@ -1,12 +1,18 @@
+<<<<<<< HEAD
 from fastapi import APIRouter, HTTPException
 from typing import List
 from app.schemas.reporte_schema import ReporteCreate, ReporteResponse
+=======
+
+from fastapi import APIRouter
+>>>>>>> bbe077c (cambios en la manin antes de subir a la rama)
 
 router = APIRouter(
     prefix="/reportes",
     tags=["Reportes"]
 )
 
+<<<<<<< HEAD
 # Base temporal (lista en memoria)
 reportes_db = []
 
@@ -43,3 +49,12 @@ def eliminar_reporte(reporte_id: int):
             reportes_db.pop(i)
             return {"mensaje": "Reporte eliminado"}
     raise HTTPException(status_code=404, detail="Reporte no encontrado")
+=======
+@router.get("/")
+def obtener_reportes():
+    return {
+        "total_productos": 1,
+        "inventario_total": 10,
+        "mensaje": "Reporte general del sistema funcionando"
+    }
+>>>>>>> bbe077c (cambios en la manin antes de subir a la rama)

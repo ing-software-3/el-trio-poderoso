@@ -51,9 +51,10 @@ Uvicorn: Servidor para FastAPI
 │
 ├── app/
 │   ├── main.py              # Punto de entrada FastAPI
-│   ├── database.py          # Conexión a MySQL
+│   ├── core/
+│   │   └── database.py      # Conexión a MySQL
 │   ├── models/
-│   │   └── producto.py
+│   │   └── products.py
 │   ├── schemas/
 │   │   └── producto_schema.py
 │   ├── routes/
@@ -85,7 +86,7 @@ Se devuelve una respuesta en formato JSON
 | categoria      | VARCHAR | Tipo de producto    |
 | cantidad       | INT     | Cantidad disponible |
 | precio         | FLOAT   | Precio              |
-| fecha_registro | DATE    | Fecha de ingreso    |
+| fecha_registro | DATETIME| Fecha de ingreso    |
 
 ```
 
