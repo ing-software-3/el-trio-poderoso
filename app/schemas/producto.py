@@ -8,7 +8,8 @@ class ProductoBase(BaseModel):
     categoria: str
     cantidad: int
     precio: float
-
+    fecha_registro: Optional[datetime] = None
+    
 class ProductoCreate(ProductoBase):
     pass # Aquí usamos los mismos datos de arriba porque para crear el producto no necesitamos nada extra
 
