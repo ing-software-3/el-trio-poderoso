@@ -10,10 +10,7 @@ router = APIRouter(
     tags=["Productos"]
 )
 
-<<<<<<< HEAD
-# Con esta función el programa se conecta a la base de datos de XAMPP cada vez que alguien pide algo
-=======
->>>>>>> 7ee1a10 (trabajo final sandra)
+
 def get_db():
     db = SessionLocal()
     try:
