@@ -43,7 +43,7 @@ def crear_producto(item: ProductoCreate, db: Session = Depends(get_db)):
     nuevo = Producto(
         nombre=item.nombre,
         categoria=item.categoria,
-        cantidad=item.cantidad,
+        stock=item.stock,
         precio=item.precio
     )
 
