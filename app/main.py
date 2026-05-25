@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 <<<<<<< HEAD
+<<<<<<< HEAD
 from app.routes import producto_routes       # ✅ CORRECTO
 from app.routes import reporte_routes        # ✅ AGREGA ESTE
 =======
@@ -9,6 +10,11 @@ from app.core.database import engine, Base
 from app.models import reportes
 >>>>>>> bbe077c (cambios en la manin antes de subir a la rama)
 
+=======
+from app.routes import producto_routes
+from app.routes import reporte_routes
+from app.db.database import Base, engine  # ✅ IMPORTANTE
+>>>>>>> 7ac7fd6 (feat: modulos reportes funcional)
 
 app = FastAPI(
     title="Sistema de Inventario - Liceo Infantil Expresiones Pedagógicas",
@@ -28,6 +34,7 @@ def get_start():
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Aquí le decimos a la aplicación que use todas las rutas que hicimos para los productos
 =======
 # ✅ RUTAS
@@ -35,5 +42,7 @@ def get_start():
 =======
 # ✅ Rutas
 >>>>>>> bbe077c (cambios en la manin antes de subir a la rama)
+=======
+>>>>>>> 7ac7fd6 (feat: modulos reportes funcional)
 app.include_router(producto_routes.router)
 app.include_router(reporte_routes.router)

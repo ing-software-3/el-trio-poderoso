@@ -16,7 +16,10 @@ from app.schemas.producto_schema import ProductoCreate, ProductoResponse, Produc
 from app.db.database import SessionLocal
 from app.models.producto import Producto
 from app.schemas.producto import ProductoCreate, ProductoResponse, ProductoBase
+<<<<<<< HEAD
 >>>>>>> d508e30 (feat: módulo de productos funcional con conexión a base de datos)
+=======
+>>>>>>> 7ac7fd6 (feat: modulos reportes funcional)
 
 router = APIRouter(
     prefix="/productos",
@@ -125,4 +128,7 @@ def eliminar_producto(producto_id: int, db: Session = Depends(get_db)):
     db.commit()
 
     return {"mensaje": f"Producto con ID {producto_id} eliminado correctamente"}
+<<<<<<< HEAD
 >>>>>>> d508e30 (feat: módulo de productos funcional con conexión a base de datos)
+=======
+>>>>>>> 7ac7fd6 (feat: modulos reportes funcional)
