@@ -1,16 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
-from app.core.database import SessionLocal
-from app.crud import producto_crud
-from app.schemas.producto_schema import ProductoCreate, ProductoResponse, ProductoBase
+from core.database import SessionLocal
+from crud import producto_crud
+from schemas.producto_schema import ProductoCreate, ProductoResponse, ProductoBase 
 
 router = APIRouter(
     prefix="/productos",
     tags=["Productos"]
 )
 
+<<<<<<< HEAD
 # Con esta función el programa se conecta a la base de datos de XAMPP cada vez que alguien pide algo
+=======
+>>>>>>> 7ee1a10 (trabajo final sandra)
 def get_db():
     db = SessionLocal()
     try:

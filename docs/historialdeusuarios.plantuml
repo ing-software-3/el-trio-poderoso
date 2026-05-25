@@ -11,7 +11,6 @@ skinparam arrowColor #333333
 
 ' ===== Actores =====
 actor "Administrador/\nProfesor" as actor_admin
-actor "Sistema" as actor_sis
 
 rectangle "Historial de Usuarios" {
 
@@ -24,9 +23,11 @@ rectangle "Historial de Usuarios" {
     usecase "Actualizar Producto\nExistente" as UC_ACT
     usecase "Eliminar Producto\nExistente" as UC_DEL
 
-    ' ===== Historiales adicionales (tuyos) =====
-    usecase "Recibir Alerta\nde Stock Bajo" as UC_ALERT
-    usecase "Generar\nReportes" as UC_REP
+    ' ===== Módulo de Reportes Simplificado =====
+    package "Módulo de Reportes" {
+        usecase "Reporte de Valor Total\n(Inversión)" as UC_REP_VAL
+        usecase "Reporte de Productos\npor Agotarse" as UC_REP_LOW
+    }
     usecase "Consultar Stock\nDisponible" as UC_STOCK
 
     ' ===== Relaciones del actor =====
@@ -38,11 +39,9 @@ rectangle "Historial de Usuarios" {
     UC_GEST ..> UC_ACT : <<include>>
     UC_GEST ..> UC_DEL : <<include>>
     UC_GEST ..> UC_STOCK : <<include>>
-    UC_GEST ..> UC_REP : <<include>>
-
-    ' ===== Relaciones del sistema =====
-    actor_sis --> UC_ALERT
-    UC_ALERT ..> UC_STOCK : <<include>>
+    
+    UC_REP_VAL --|> UC_LIST : <<extends>>
+    UC_REP_LOW --|> UC_LIST : <<extends>>
 }
 
 @enduml
