@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from app.routes import producto_routes
 from app.routes import reporte_routes
-from app.core.database import engine, Base
+from app.db.database import engine, Base
 
 app = FastAPI(
     title="Sistema de Inventario - Liceo Infantil Expresiones Pedagógicas",

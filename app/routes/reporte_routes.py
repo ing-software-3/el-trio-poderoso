@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import List
 
-from app.core.database import SessionLocal
+from app.db.database import SessionLocal
 from app.models.producto import Producto
 from app.models.reportes import Reporte
 from app.schemas.reporte_schema import ReporteCreate, ReporteResponse
@@ -81,4 +81,4 @@ def eliminar_reporte(reporte_id: int, db: Session = Depends(get_db)):
     db.delete(reporte)
     db.commit()
 
-    return {"mensaje": f"Reporte {reporte_id} eliminado correctamente"
+    return {"mensaje": f"Reporte {reporte_id} eliminado correctamente"}

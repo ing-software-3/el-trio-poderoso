@@ -1,6 +1,6 @@
 
 from sqlalchemy import Column, Integer, String
-from app.core.database import Base
+from app.db.database import Base
 
 class Reporte(Base):
     __tablename__ = "reportes"

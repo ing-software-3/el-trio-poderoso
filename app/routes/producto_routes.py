@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
-from app.core.database import SessionLocal
+from app.db.database import SessionLocal
 from app.models.producto import Producto
 from app.schemas.producto_schema import ProductoCreate, ProductoResponse, ProductoBase
 
