@@ -2,16 +2,16 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
-# Estos son como los formularios que creamos para que los datos de los productos queden bien organizados
+# Esquema de datos que coincide con tu base de datos en MySQL
 class ProductoBase(BaseModel):
     nombre: str
     categoria: str
-    cantidad: int
+    stock: int
     precio: float
     fecha_registro: Optional[datetime] = None
     
 class ProductoCreate(ProductoBase):
-    pass # Aquí usamos los mismos datos de arriba porque para crear el producto no necesitamos nada extra
+    pass # No necesitamos campos adicionales para la creación por ahora
 
 class ProductoResponse(ProductoBase):
     id: int

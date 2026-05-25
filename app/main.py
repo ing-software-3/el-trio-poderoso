@@ -9,6 +9,7 @@ from app.core.database import engine, Base
 from app.models import reportes
 >>>>>>> bbe077c (cambios en la manin antes de subir a la rama)
 
+
 app = FastAPI(
     title="Sistema de Inventario - Liceo Infantil Expresiones Pedagógicas",
     description="API para la gestión de materiales didácticos y de oficina"
