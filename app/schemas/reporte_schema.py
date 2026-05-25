@@ -1,15 +1,19 @@
 from pydantic import BaseModel
-from typing import Optional
 
-# Este es el molde para cuando creamos o actualizamos un reporte
+# ✅ Base para crear o actualizar reportes
 class ReporteBase(BaseModel):
     descripcion: str
-    tipo: str # Ejemplo: "Inversión", "Stock Bajo", "Mensual"
+    tipo: str
 
+
+# ✅ Para crear reporte
 class ReporteCreate(ReporteBase):
     pass
 
+
+# ✅ Respuesta que devuelve la API
 class ReporteResponse(ReporteBase):
     id: int
+
     class Config:
         from_attributes = True

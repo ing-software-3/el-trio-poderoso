@@ -2,16 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
-from app.db.database import SessionLocal
+from app.core.database import SessionLocal
 from app.models.producto import Producto
-from app.schemas.producto import ProductoCreate, ProductoResponse, ProductoBase
+from app.schemas.producto_schema import ProductoCreate, ProductoResponse, ProductoBase
 
 router = APIRouter(
     prefix="/productos",
     tags=["Productos"]
 )
 
-# conexión a la base de datos
+# ✅ Conexión a la base de datos
 def get_db():
     db = SessionLocal()
     try:
@@ -19,20 +19,25 @@ def get_db():
     finally:
         db.close()
 
-# GET → todos los productos
+
+# ✅ GET → todos los productos
 @router.get("/", response_model=List[ProductoResponse])
 def listar_productos(db: Session = Depends(get_db)):
     return db.query(Producto).all()
 
-# GET → producto por ID
+
+# ✅ GET → producto por ID
 @router.get("/{producto_id}", response_model=ProductoResponse)
 def obtener_producto(producto_id: int, db: Session = Depends(get_db)):
     producto = db.query(Producto).filter(Producto.id == producto_id).first()
+
     if not producto:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
+
     return producto
 
-# POST → crear producto
+
+# ✅ POST → crear producto
 @router.post("/", response_model=ProductoResponse, status_code=status.HTTP_201_CREATED)
 def crear_producto(item: ProductoCreate, db: Session = Depends(get_db)):
     nuevo = Producto(
@@ -48,7 +53,8 @@ def crear_producto(item: ProductoCreate, db: Session = Depends(get_db)):
 
     return nuevo
 
-# PUT → actualizar producto
+
+# ✅ PUT → actualizar producto
 @router.put("/{producto_id}", response_model=ProductoResponse)
 def actualizar_producto(producto_id: int, item: ProductoBase, db: Session = Depends(get_db)):
     producto = db.query(Producto).filter(Producto.id == producto_id).first()
@@ -66,7 +72,8 @@ def actualizar_producto(producto_id: int, item: ProductoBase, db: Session = Depe
 
     return producto
 
-# DELETE → eliminar producto
+
+# ✅ DELETE → eliminar producto
 @router.delete("/{producto_id}")
 def eliminar_producto(producto_id: int, db: Session = Depends(get_db)):
     producto = db.query(Producto).filter(Producto.id == producto_id).first()

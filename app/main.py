@@ -1,8 +1,8 @@
 from fastapi import FastAPI
+
 from app.routes import producto_routes
 from app.routes import reporte_routes
 from app.core.database import engine, Base
-from app.models import reportes
 
 app = FastAPI(
     title="Sistema de Inventario - Liceo Infantil Expresiones Pedagógicas",
@@ -20,6 +20,6 @@ def get_start():
         "estado": "Online"
     }
 
-# ✅ Rutas
+# ✅ RUTAS
 app.include_router(producto_routes.router)
 app.include_router(reporte_routes.router)
