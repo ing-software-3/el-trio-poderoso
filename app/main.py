@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from routes import usuarios
+from routes import alertas
 from app.routes import producto_routes
 from app.routes import reporte_routes
 from app.db.database import engine, Base
@@ -23,5 +24,5 @@ def get_start():
 # ✅ RUTAS
 app.include_router(producto_routes.router)
 app.include_router(reporte_routes.router)
-
 app.include_router(usuarios.router)
+app.include_router(alertas.router)
