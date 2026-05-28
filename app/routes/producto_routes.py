@@ -40,10 +40,11 @@ def obtener_producto(producto_id: int, db: Session = Depends(get_db)):
 # ✅ POST → crear producto
 @router.post("/", response_model=ProductoResponse, status_code=status.HTTP_201_CREATED)
 def crear_producto(item: ProductoCreate, db: Session = Depends(get_db)):
+    # 🛠️ CAMBIO AQUÍ: Usamos stock=item.stock en lugar de cantidad
     nuevo = Producto(
         nombre=item.nombre,
         categoria=item.categoria,
-        cantidad=item.cantidad,
+        stock=item.stock,      # ✅ Corregido
         precio=item.precio
     )
 
@@ -62,9 +63,10 @@ def actualizar_producto(producto_id: int, item: ProductoBase, db: Session = Depe
     if not producto:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
 
+    # 🛠️ CAMBIO AQUÍ TAMBIÉN: Usamos stock=item.stock en lugar de cantidad
     producto.nombre = item.nombre
     producto.categoria = item.categoria
-    producto.cantidad = item.cantidad
+    producto.stock = item.stock      # ✅ Corregido
     producto.precio = item.precio
 
     db.commit()
