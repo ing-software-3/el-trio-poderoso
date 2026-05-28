@@ -22,7 +22,7 @@ def get_db():
 # ✅ OPERACIONES DE INVENTARIO
 # ======================================================
 
-# 1. Registrar Entrada (Aumentar Stock)
+# 1. Registrar Entrada (Aumentar Cantidad)
 @router.put("/registrar-entrada/{producto_id}")
 def registrar_entrada(producto_id: int, cantidad: int, db: Session = Depends(get_db)):
     if cantidad <= 0:
@@ -33,6 +33,7 @@ def registrar_entrada(producto_id: int, cantidad: int, db: Session = Depends(get
     if not producto:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
     
+    # 🛠️ SE ACOPLA A TU COMPAÑERA: Usamos .cantidad porque así está en su modelo
     producto.cantidad += cantidad
     db.commit()
     db.refresh(producto)
@@ -44,7 +45,7 @@ def registrar_entrada(producto_id: int, cantidad: int, db: Session = Depends(get
     }
 
 
-# 2. Registrar Salida (Disminuir Stock)
+# 2. Registrar Salida (Disminuir Cantidad)
 @router.put("/registrar-salida/{producto_id}")
 def registrar_salida(producto_id: int, cantidad: int, db: Session = Depends(get_db)):
     if cantidad <= 0:
@@ -55,12 +56,14 @@ def registrar_salida(producto_id: int, cantidad: int, db: Session = Depends(get_
     if not producto:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
         
+    # 🛠️ SE ACOPLA A TU COMPAÑERA: Validación usando .cantidad
     if producto.cantidad < cantidad:
         raise HTTPException(
             status_code=400, 
             detail=f"Stock insuficiente. Solo hay {producto.cantidad} unidades disponibles."
         )
     
+    # 🛠️ SE ACOPLA A TU COMPAÑERA: Restamos directamente a la cantidad
     producto.cantidad -= cantidad
     db.commit()
     db.refresh(producto)
@@ -80,8 +83,9 @@ def consultar_stock(producto_id: int, db: Session = Depends(get_db)):
     if not producto:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
         
+    # 🛠️ SE ACOPLA A TU COMPAÑERA: Retornamos usando .cantidad
     return {
         "producto_id": producto.id,
         "producto": producto.nombre,
         "stock_actual": producto.cantidad
-    }
+    }   
