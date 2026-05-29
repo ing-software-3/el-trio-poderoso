@@ -8,6 +8,6 @@ class Producto(Base):
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String(100))
     categoria = Column(String(100))
-    cantidad = Column(Integer)
+    stock = Column(Integer)
     precio = Column(Float)
     fecha_registro = Column(Date, default=date.today)
