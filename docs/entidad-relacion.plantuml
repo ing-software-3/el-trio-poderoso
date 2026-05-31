@@ -1,0 +1,56 @@
+@startuml
+
+entity sistema {
+  +id : BIGINT <<PK>>
+}
+
+entity usuarios {
+  +id : BIGINT <<PK>>
+  nombre : VARCHAR
+  correo : VARCHAR <<UNIQUE>>
+  contrasena : VARCHAR
+  fecha_creacion : TIMESTAMP
+}
+
+entity inventario {
+  +id : BIGINT <<PK>>
+}
+
+entity productos {
+  +id : BIGINT <<PK>>
+  nombre : VARCHAR
+  categoria : VARCHAR
+  stock : INT
+  precio : DECIMAL
+  fecha_registro : TIMESTAMP
+  usuario_id : BIGINT <<FK>>
+}
+
+entity reportes {
+  +id : BIGINT <<PK>>
+  titulo : VARCHAR
+  datos : JSON
+  fecha_generacion : TIMESTAMP
+  usuario_id : BIGINT <<FK>>
+}
+
+entity alertas {
+  +id : BIGINT <<PK>>
+  mensaje : TEXT
+  fecha_creacion : TIMESTAMP
+  producto_id : BIGINT <<FK>>
+}
+
+' Relaciones
+
+sistema ||--o{ usuarios : registra
+sistema ||--|| inventario : usa
+
+inventario ||--o{ productos : contiene
+
+usuarios ||--o{ productos : gestiona
+usuarios ||--o{ reportes : genera
+
+productos ||--o{ alertas : genera
+
+@enduml
