@@ -30,7 +30,7 @@ Base.metadata.create_all(bind=engine)
 
 """
 # RUTA INICIAL
-@app.get("/")
+@app.get("/", tags=["Inicio"])
 def get_start():
     return {
         "mensaje": "Bienvenido al Sistema de Inventario",
@@ -38,7 +38,6 @@ def get_start():
         "estado": "Online"
     }
 """
-
 # INCLUIR TODOS LOS ROUTERS
 app.include_router(producto_routes.router)
 app.include_router(reporte_routes.router)
