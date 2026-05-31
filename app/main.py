@@ -1,18 +1,33 @@
 from fastapi import FastAPI
 from app.db.database import engine, Base
-# ✅ Agrupamos todos los imports de las rutas en un solo lugar limpio
-from app.routes import alertas_routes, producto_routes, reporte_routes, inventario_routes, usuarios_routes
 
-# ✅ 1. Primero creamos la aplicación de FastAPI
+#  1. Importamos todos los routers de las rutas en un solo lugar limpio
+from app.routes import (
+    producto_routes,
+    reporte_routes,
+    usuarios_routes,
+    alertas_routes,
+    inventario_routes,
+    sistema_routes  # <-- ¡Tu nuevo router del sistema central!
+)
+
+#  2. TRUCO DIRECTO EN LA MAIN (Para que cree la tabla sin usar __init__.py)
+# Al importar el modelo aquí mismo, SQLAlchemy lo lee al arrancar y crea la tabla "sistemas"
+from app.models.sistemas import Sistema 
+
+
+#  3. Creamos la aplicación de FastAPI con los datos del Liceo
 app = FastAPI(
     title="Sistema de Inventario - Liceo Infantil Expresiones Pedagógicas",
     description="API para la gestión de materiales didácticos y de oficina"
 )
 
-# ✅ 2. Creamos las tablas de la base de datos
+
+# 4. Creamos las tablas de la base de datos automáticamente
 Base.metadata.create_all(bind=engine)
 
-# ✅ 3. Ruta de bienvenida
+
+# 5. Ruta de bienvenida en la raíz de la API
 @app.get("/")
 def get_start():
     return {
@@ -21,9 +36,11 @@ def get_start():
         "estado": "Online"
     }
 
-# ✅ 4. Incluimos TODOS los routers (¡Aquí acomodamos el tuyo abajo de app!)
+
+#  6. Incluimos TODOS los routers para que aparezcan en Swagger
 app.include_router(producto_routes.router)
 app.include_router(reporte_routes.router)
 app.include_router(usuarios_routes.router)
 app.include_router(alertas_routes.router)
-app.include_router(inventario_routes.router)  # <--- ¡Listo tu inventario!
+app.include_router(inventario_routes.router)
+app.include_router(sistema_routes.router)  # <--- ¡Tu Sistema Central conectado con éxito!

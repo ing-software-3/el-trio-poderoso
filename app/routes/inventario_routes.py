@@ -1,91 +1,101 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
-from app.db.database import SessionLocal
+from app.db.database import get_db
 from app.models.producto import Producto
+from app.models.inventarios import Inventario
+from app.schemas.inventario_schema import MovimientoInventario, RespuestaInventario
 
 router = APIRouter(
     prefix="/inventario",
     tags=["Inventario"]
 )
 
-# ✅ Conexión a la base de datos
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# MOVER INVENTARIO
+@router.post("/mover", response_model=RespuestaInventario, status_code=status.HTTP_201_CREATED)
+def mover_inventario(item: MovimientoInventario, db: Session = Depends(get_db)):
 
-# ======================================================
-# ✅ OPERACIONES DE INVENTARIO
-# ======================================================
-
-# 1. Registrar Entrada (Aumentar Cantidad)
-@router.put("/registrar-entrada/{producto_id}")
-def registrar_entrada(producto_id: int, cantidad: int, db: Session = Depends(get_db)):
-    if cantidad <= 0:
-        raise HTTPException(status_code=400, detail="La cantidad debe ser mayor a cero")
-        
-    producto = db.query(Producto).filter(Producto.id == producto_id).first()
+    producto = db.query(Producto).filter(Producto.id == item.producto_id).first()
     
     if not producto:
-        raise HTTPException(status_code=404, detail="Producto no encontrado")
-    
-    # 🛠️ SE ACOPLA A TU COMPAÑERA: Usamos .cantidad porque así está en su modelo
-    producto.cantidad += cantidad
-    db.commit()
-    db.refresh(producto)
-    
-    return {
-        "mensaje": f"Entrada registrada. Se sumaron {cantidad} unidades.",
-        "producto": producto.nombre,
-        "nuevo_stock": producto.cantidad
-    }
+        raise HTTPException(status_code=404, detail="El producto no existe")
 
+    nuevo_stock = producto.cantidad + item.cantidad
 
-# 2. Registrar Salida (Disminuir Cantidad)
-@router.put("/registrar-salida/{producto_id}")
-def registrar_salida(producto_id: int, cantidad: int, db: Session = Depends(get_db)):
-    if cantidad <= 0:
-        raise HTTPException(status_code=400, detail="La cantidad debe ser mayor a cero")
-        
-    producto = db.query(Producto).filter(Producto.id == producto_id).first()
-    
-    if not producto:
-        raise HTTPException(status_code=404, detail="Producto no encontrado")
-        
-    # 🛠️ SE ACOPLA A TU COMPAÑERA: Validación usando .cantidad
-    if producto.cantidad < cantidad:
+    # CORREGIDO AQUÍ
+    if nuevo_stock < 0:
         raise HTTPException(
-            status_code=400, 
-            detail=f"Stock insuficiente. Solo hay {producto.cantidad} unidades disponibles."
+            status_code=400,
+            detail=f"Inventario insuficiente. Solo tienes {producto.cantidad} unidades disponibles."
         )
-    
-    # 🛠️ SE ACOPLA A TU COMPAÑERA: Restamos directamente a la cantidad
-    producto.cantidad -= cantidad
+
+    producto.cantidad = nuevo_stock
+
+    nuevo_movimiento = Inventario(
+        producto_id=item.producto_id,
+        cantidad=item.cantidad
+    )
+
+    db.add(nuevo_movimiento)
     db.commit()
     db.refresh(producto)
-    
+
+    tipo_accion = "adicionadas" if item.cantidad > 0 else "retiradas"
+
     return {
-        "mensaje": f"Salida registrada. Se restaron {cantidad} unidades.",
+        "mensaje": f"Inventario actualizado. Unidades {tipo_accion} correctamente.",
         "producto": producto.nombre,
         "nuevo_stock": producto.cantidad
     }
 
 
-# 3. Consultar Stock de un Producto Específico
-@router.get("/consultar-stock/{producto_id}")
-def consultar_stock(producto_id: int, db: Session = Depends(get_db)):
-    producto = db.query(Producto).filter(Producto.id == producto_id).first()
-    
-    if not producto:
-        raise HTTPException(status_code=404, detail="Producto no encontrado")
-        
-    # 🛠️ SE ACOPLA A TU COMPAÑERA: Retornamos usando .cantidad
-    return {
-        "producto_id": producto.id,
-        "producto": producto.nombre,
-        "stock_actual": producto.cantidad
-    }   
+#  HISTORIAL
+@router.get("/historial")
+def ver_historial_movimientos(db: Session = Depends(get_db)):
+
+    movimientos = db.query(Inventario).all()
+
+    resultado = []
+    for m in movimientos:
+        resultado.append({
+            "id_movimiento": m.id,
+            "producto_id": m.producto_id,
+            "producto_nombre": m.producto.nombre if m.producto else "Desconocido",
+            "cantidad_movida": m.cantidad,
+            "fecha": m.fecha_movimiento
+        })
+
+    return resultado
+
+
+# ACTUALIZAR HISTORIAL
+@router.put("/actualizar/{movimiento_id}")
+def actualizar_movimiento_viejo(movimiento_id: int, item: MovimientoInventario, db: Session = Depends(get_db)):
+
+    movimiento = db.query(Inventario).filter(Inventario.id == movimiento_id).first()
+
+    if not movimiento:
+        raise HTTPException(status_code=404, detail="Registro de inventario no encontrado")
+
+    movimiento.producto_id = item.producto_id
+    movimiento.cantidad = item.cantidad
+
+    db.commit()
+
+    return {"mensaje": f"Movimiento {movimiento_id} actualizado correctamente en el historial"}
+
+
+# ELIMINAR
+@router.delete("/borrar/{movimiento_id}")
+def eliminar_movimiento_historial(movimiento_id: int, db: Session = Depends(get_db)):
+
+    movimiento = db.query(Inventario).filter(Inventario.id == movimiento_id).first()
+
+    if not movimiento:
+        raise HTTPException(status_code=404, detail="Registro de inventario no encontrado")
+
+    db.delete(movimiento)
+    db.commit()
+
+    return {"mensaje": f"Movimiento {movimiento_id} eliminado del historial"}
