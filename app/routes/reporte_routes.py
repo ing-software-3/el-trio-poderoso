@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import List
 
-from app.db.database import SessionLocal
+from app.db.database import get_db   
 from app.models.producto import Producto
 from app.models.reportes import Reporte
 from app.schemas.reporte_schema import ReporteCreate, ReporteResponse
@@ -13,18 +13,6 @@ router = APIRouter(
     tags=["Reportes"]
 )
 
-# ✅ Conexión a la base de datos
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-# ======================================================
-# ✅ REPORTES DINÁMICOS
-# ======================================================
 
 @router.get("/inversion-total")
 def reporte_inversion(db: Session = Depends(get_db)):
@@ -37,6 +25,7 @@ def reporte_inversion(db: Session = Depends(get_db)):
     }
 
 
+# ✅ REPORTE STOCK BAJO
 @router.get("/stock-bajo")
 def reporte_stock_bajo(db: Session = Depends(get_db)):
     productos_criticos = db.query(Producto).filter(Producto.cantidad <= 5).all()
@@ -48,9 +37,6 @@ def reporte_stock_bajo(db: Session = Depends(get_db)):
     }
 
 
-# ======================================================
-# ✅ CRUD DE REPORTES (LO QUE PIDIÓ EL PROFE)
-# ======================================================
 
 @router.post("/guardar", response_model=ReporteResponse)
 def guardar_reporte(item: ReporteCreate, db: Session = Depends(get_db)):
@@ -69,6 +55,19 @@ def guardar_reporte(item: ReporteCreate, db: Session = Depends(get_db)):
 @router.get("/historial", response_model=List[ReporteResponse])
 def ver_historial(db: Session = Depends(get_db)):
     return db.query(Reporte).all()
+
+
+@router.delete("/borrar/{reporte_id}")
+def eliminar_reporte(reporte_id: int, db: Session = Depends(get_db)):
+    reporte = db.query(Reporte).filter(Reporte.id == reporte_id).first()
+
+    if not reporte:
+        raise HTTPException(status_code=404, detail="Reporte no encontrado")
+
+    db.delete(reporte)
+    db.commit()
+
+    return {"mensaje": f"Reporte {reporte_id} eliminado correctamente"}
 
 
 @router.delete("/borrar/{reporte_id}")
