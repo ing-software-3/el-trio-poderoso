@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from datetime import date
-from app.schemas.alertas import AlertaCreate, AlertaResponse
+from app.schemas.alertas_schema import AlertaCreate, AlertaResponse
 
 router = APIRouter(prefix="/alertas", tags=["Alertas"])
 

@@ -11,7 +11,6 @@ router = APIRouter(
     tags=["Productos"]
 )
 
-# ✅ Conexión a la base de datos
 def get_db():
     db = SessionLocal()
     try:
@@ -20,13 +19,11 @@ def get_db():
         db.close()
 
 
-# ✅ GET → todos los productos
 @router.get("/", response_model=List[ProductoResponse])
 def listar_productos(db: Session = Depends(get_db)):
     return db.query(Producto).all()
 
 
-# ✅ GET → producto por ID
 @router.get("/{producto_id}", response_model=ProductoResponse)
 def obtener_producto(producto_id: int, db: Session = Depends(get_db)):
     producto = db.query(Producto).filter(Producto.id == producto_id).first()
@@ -37,15 +34,14 @@ def obtener_producto(producto_id: int, db: Session = Depends(get_db)):
     return producto
 
 
-# ✅ POST → crear producto
 @router.post("/", response_model=ProductoResponse, status_code=status.HTTP_201_CREATED)
 def crear_producto(item: ProductoCreate, db: Session = Depends(get_db)):
-    # 🛠️ CAMBIO AQUÍ: Usamos stock=item.stock en lugar de cantidad
     nuevo = Producto(
         nombre=item.nombre,
         categoria=item.categoria,
-        stock=item.stock,      # ✅ Corregido
-        precio=item.precio
+        cantidad=item.cantidad,      
+        precio=item.precio,
+        fecha_registro=item.fecha_registro
     )
 
     db.add(nuevo)
@@ -55,7 +51,6 @@ def crear_producto(item: ProductoCreate, db: Session = Depends(get_db)):
     return nuevo
 
 
-# ✅ PUT → actualizar producto
 @router.put("/{producto_id}", response_model=ProductoResponse)
 def actualizar_producto(producto_id: int, item: ProductoBase, db: Session = Depends(get_db)):
     producto = db.query(Producto).filter(Producto.id == producto_id).first()
@@ -63,10 +58,9 @@ def actualizar_producto(producto_id: int, item: ProductoBase, db: Session = Depe
     if not producto:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
 
-    # 🛠️ CAMBIO AQUÍ TAMBIÉN: Usamos stock=item.stock en lugar de cantidad
     producto.nombre = item.nombre
     producto.categoria = item.categoria
-    producto.stock = item.stock      # ✅ Corregido
+    producto.cantidad = item.cantidad      
     producto.precio = item.precio
 
     db.commit()
@@ -75,7 +69,6 @@ def actualizar_producto(producto_id: int, item: ProductoBase, db: Session = Depe
     return producto
 
 
-# ✅ DELETE → eliminar producto
 @router.delete("/{producto_id}")
 def eliminar_producto(producto_id: int, db: Session = Depends(get_db)):
     producto = db.query(Producto).filter(Producto.id == producto_id).first()
