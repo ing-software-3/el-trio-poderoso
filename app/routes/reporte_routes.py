@@ -25,7 +25,7 @@ def reporte_inversion(db: Session = Depends(get_db)):
     }
 
 
-# ✅ REPORTE STOCK BAJO
+
 @router.get("/stock-bajo")
 def reporte_stock_bajo(db: Session = Depends(get_db)):
     productos_criticos = db.query(Producto).filter(Producto.cantidad <= 5).all()
@@ -55,19 +55,6 @@ def guardar_reporte(item: ReporteCreate, db: Session = Depends(get_db)):
 @router.get("/historial", response_model=List[ReporteResponse])
 def ver_historial(db: Session = Depends(get_db)):
     return db.query(Reporte).all()
-
-
-@router.delete("/borrar/{reporte_id}")
-def eliminar_reporte(reporte_id: int, db: Session = Depends(get_db)):
-    reporte = db.query(Reporte).filter(Reporte.id == reporte_id).first()
-
-    if not reporte:
-        raise HTTPException(status_code=404, detail="Reporte no encontrado")
-
-    db.delete(reporte)
-    db.commit()
-
-    return {"mensaje": f"Reporte {reporte_id} eliminado correctamente"}
 
 
 @router.delete("/borrar/{reporte_id}")
