@@ -28,6 +28,7 @@ app = FastAPI(
 # CREAR TABLAS
 Base.metadata.create_all(bind=engine)
 
+"""
 # RUTA INICIAL
 @app.get("/")
 def get_start():
@@ -36,6 +37,7 @@ def get_start():
         "institucion": "Liceo Infantil Expresiones Pedagógicas",
         "estado": "Online"
     }
+"""
 
 # INCLUIR TODOS LOS ROUTERS
 app.include_router(producto_routes.router)
