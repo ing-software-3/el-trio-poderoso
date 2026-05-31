@@ -3,42 +3,45 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.main import app
-from app.db.database import Base
+from app.db.database import Base, get_db
 
-# 🛠️ Creamos una base de datos temporal en memoria para no dañar phpMyAdmin
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test_api.db"
+# Configuración de tu base de datos secundaria de pruebas en XAMPP
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:@localhost:3306/prueba_test"
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+# Creamos el motor de conexión para MySQL
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-@pytest.fixture(scope="function")
-def db():
-    # Paso A: Se crean las tablas limpias antes de la prueba
+@pytest.fixture(scope="session", autouse=True)
+def setup_database():
+    """Crea las tablas en 'prueba_test' automáticamente antes de empezar"""
     Base.metadata.create_all(bind=engine)
-    db = TestingSessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-        # Paso B: Se destruye la base de datos temporal al terminar el test
-        Base.metadata.drop_all(bind=engine)
+    yield
+    # Al terminar todas las pruebas, limpia la base de datos
+    Base.metadata.drop_all(bind=engine)
 
-@pytest.fixture(scope="function")
-def client(db):
-    # Traemos el conector de rutas de tu sistema
-    from app.routes.sistema_routes import get_db
+@pytest.fixture
+def db_session():
+    """Genera una sesión limpia y aislada para cada prueba independiente"""
+    connection = engine.connect()
+    transaction = connection.begin()
+    session = TestingSessionLocal(bind=connection)
     
-    # Le decimos a FastAPI que use la base de datos de mentiras en vez de la real
+    yield session
+    
+    session.close()
+    transaction.rollback()
+    connection.close()
+
+@pytest.fixture
+def client(db_session):
+    """Intercepta FastAPI para que use la base de datos de pruebas"""
     def override_get_db():
         try:
-            yield db
+            yield db_session
         finally:
-            db.close()
-    
+            pass
     app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()
-    
