@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import List
 
-from app.db.database import SessionLocal
+from app.db.database import get_db   
 from app.models.producto import Producto
 from app.models.reportes import Reporte
 from app.schemas.reporte_schema import ReporteCreate, ReporteResponse
@@ -13,18 +13,6 @@ router = APIRouter(
     tags=["Reportes"]
 )
 
-# ✅ Conexión a la base de datos
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-# ======================================================
-# ✅ REPORTES DINÁMICOS
-# ======================================================
 
 @router.get("/inversion-total")
 def reporte_inversion(db: Session = Depends(get_db)):
@@ -35,6 +23,7 @@ def reporte_inversion(db: Session = Depends(get_db)):
         "valor_total": total if total else 0,
         "mensaje": "Este es el capital total en productos"
     }
+
 
 
 @router.get("/stock-bajo")
@@ -48,9 +37,6 @@ def reporte_stock_bajo(db: Session = Depends(get_db)):
     }
 
 
-# ======================================================
-# ✅ CRUD DE REPORTES (LO QUE PIDIÓ EL PROFE)
-# ======================================================
 
 @router.post("/guardar", response_model=ReporteResponse)
 def guardar_reporte(item: ReporteCreate, db: Session = Depends(get_db)):

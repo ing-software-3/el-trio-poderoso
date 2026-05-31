@@ -1,10 +1,11 @@
-from pydantic import BaseModel
-from typing import Optional
+from sqlalchemy import Column, Integer, String
+from app.db.database import Base
 
+class Usuario(Base):
+    __tablename__ = "usuarios"
 
-class Usuario(BaseModel):
-    id: Optional[int] = None
-    nombre: str
-    rol: str
-    correo: str
-    contraseña: str
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String(100))
+    rol = Column(String(50))
+    correo = Column(String(100), unique=True)
+    contraseña = Column(String(100))
