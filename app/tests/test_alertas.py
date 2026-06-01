@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from app.main import app
+from main import app
 import uuid
 
 client = TestClient(app)
@@ -84,7 +84,7 @@ def test_update_alerta():
     assert response.json()["mensaje"] == "Alerta actualizada: revisar stock"
 
 
-# DELETE
+# # DELETE
 # def test_delete_alerta():
 #     id_alerta = crear_alerta()
 
