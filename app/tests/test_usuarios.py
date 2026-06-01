@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from main import app
+from app.main import app
 import uuid
 
 client = TestClient(app)
@@ -72,7 +72,7 @@ def test_update_usuario():
     assert response.status_code == 200
 
 
-# DELETE
+# # DELETE
 # def test_delete_usuario():
 
 #     id_usuario = crear_usuario()
