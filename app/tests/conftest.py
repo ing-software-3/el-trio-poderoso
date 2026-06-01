@@ -15,7 +15,7 @@ from app.models.sistemas import Sistema
 def create_tables():
     Base.metadata.create_all(bind=engine)
     yield
-    Base.metadata.drop_all(bind=engine)
+    #Base.metadata.drop_all(bind=engine)
 
 
 @pytest.fixture(autouse=True)
