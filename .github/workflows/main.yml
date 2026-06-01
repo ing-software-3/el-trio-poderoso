@@ -11,8 +11,9 @@ jobs:
     env:
       DATABASE_URL: sqlite:///./test.db
       SECRET_KEY: testingsecretkey
+      PYTHONPATH: ${{ github.workspace }}
 
-    steps:      
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -27,4 +28,4 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests
-        run:  PYTHONPATH=. pytest -v
+        run: python -m pytest -v
