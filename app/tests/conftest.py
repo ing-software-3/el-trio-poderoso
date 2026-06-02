@@ -24,7 +24,12 @@ def create_tables():
     """Crea las tablas en prueba_test y las borra SOLO al final de todas las pruebas"""
     Base.metadata.create_all(bind=engine_test)
     yield
+<<<<<<< HEAD
     Base.metadata.drop_all(bind=engine_test) # Si quieres verlas en XAMPP, ponle un # al principio de esta línea
+=======
+    #Base.metadata.drop_all(bind=engine)
+
+>>>>>>> b6584d0da97cea8d3b0f205baa315b7bb0fc5317
 
 @pytest.fixture(autouse=True)
 def clean_database():
