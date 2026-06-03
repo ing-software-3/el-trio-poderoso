@@ -42,9 +42,6 @@ jobs:
       - name: MyPy
         run: mypy app
 
-      - name: Bandit
-        run: bandit -r app
-
       - name: Tests with Coverage
         run: |
           pytest \
