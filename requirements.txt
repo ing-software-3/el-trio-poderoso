@@ -12,4 +12,10 @@
     pytest==9.0.3
     httpx==0.28.1
     email-validator==2.3.0
-
+    ruff
+    mypy 
+    bandit
+    pytest-cov
+    type-python-jose
+    type-passlib
+    
