@@ -223,3 +223,31 @@ def test_update_movimiento_inventario():
 # #     assert response.status_code == 200, response.text
 # #     assert "eliminado del historial" in response.json()["mensaje"]
 # # """
+
+
+def test_alerta_automatica_stock_bajo():
+    unique = str(uuid.uuid4())[:8]
+    producto_data = {
+        "nombre": f"Producto Alerta {unique}",
+        "categoria": "Papelería",
+        "cantidad": 10,
+        "precio": 1000,
+        "fecha_registro": "2026-05-31"
+    }
+    response_prod = client.post("/productos/", json=producto_data)
+    assert response_prod.status_code in (200, 201)
+    producto_id = response_prod.json()["id"]
+
+    movimiento_data = {
+        "producto_id": producto_id,
+        "cantidad": -6
+    }
+    response_mov = client.post("/inventario/mover", json=movimiento_data)
+    assert response_mov.status_code == 201
+
+    response_alertas = client.get("/alertas/")
+    assert response_alertas.status_code == 200
+    alertas = response_alertas.json()
+    
+    alertas_producto = [a for a in alertas if a["producto_id"] == producto_id and "Stock bajo" in a["mensaje"]]
+    assert len(alertas_producto) == 1

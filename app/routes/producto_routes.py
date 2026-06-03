@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from app.db.database import get_db   # ✅ IMPORTANTE
 from app.models.producto import Producto
@@ -12,8 +12,17 @@ router = APIRouter(
 )
 
 @router.get("/", response_model=List[ProductoResponse])
-def listar_productos(db: Session = Depends(get_db)):
-    return db.query(Producto).all()
+def listar_productos(
+    nombre: Optional[str] = None,
+    categoria: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(Producto)
+    if nombre:
+        query = query.filter(Producto.nombre.ilike(f"%{nombre}%"))
+    if categoria:
+        query = query.filter(Producto.categoria.ilike(f"%{categoria}%"))
+    return query.all()
 
 
 

@@ -2,12 +2,14 @@ from fastapi import FastAPI
 from app.db.database import engine, Base
 
 # IMPORTAR TODOS LOS MODELOS
-import app.models.producto
-import app.models.reportes
-import app.models.usuarios
-import app.models.alertas
-import app.models.inventarios
-import app.models.sistemas
+from app.models import (
+    producto,  # noqa: F401
+    reportes,  # noqa: F401
+    usuarios,  # noqa: F401
+    alertas,  # noqa: F401
+    inventarios,  # noqa: F401
+    sistemas,  # noqa: F401
+)
 
 # IMPORTAR TODOS LOS ROUTERS
 from app.routes import (
@@ -20,7 +22,7 @@ from app.routes import (
 )
 
 # CREAR APP
-app = FastAPI(
+app: FastAPI = FastAPI(
     title="Sistema de Inventario - Liceo Infantil Expresiones Pedagógicas",
     description="API para la gestión de materiales didácticos y de oficina"
 )

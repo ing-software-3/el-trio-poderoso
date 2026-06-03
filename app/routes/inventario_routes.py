@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.models.producto import Producto
 from app.models.inventarios import Inventario
+from app.models.alertas import Alerta
 from app.schemas.inventario_schema import MovimientoInventario, RespuestaInventario
 
 router = APIRouter(
@@ -36,6 +37,21 @@ def mover_inventario(item: MovimientoInventario, db: Session = Depends(get_db)):
     )
 
     db.add(nuevo_movimiento)
+    
+    # Generar alerta automática si el stock es bajo (<= 5 unidades) (RF08)
+    if nuevo_stock <= 5:
+        alerta_existente = db.query(Alerta).filter(
+            Alerta.producto_id == item.producto_id,
+            Alerta.mensaje.like("%Stock bajo%")
+        ).first()
+        
+        if not alerta_existente:
+            alerta_automatica = Alerta(
+                producto_id=item.producto_id,
+                mensaje=f"Stock bajo: El producto '{producto.nombre}' tiene solo {nuevo_stock} unidades disponibles."
+            )
+            db.add(alerta_automatica)
+
     db.commit()
     db.refresh(producto)
 

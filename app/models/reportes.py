@@ -1,11 +1,12 @@
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import String, Integer
+from sqlalchemy.orm import Mapped, mapped_column
 from app.db.database import Base
 
 class Reporte(Base):
     __tablename__ = "reportes"
 
-    id = Column(Integer, primary_key=True, index=True)
-    descripcion = Column(String(200))
-    tipo = Column(String(100))
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    descripcion: Mapped[str] = mapped_column(String(200))
+    tipo: Mapped[str] = mapped_column(String(100))
 

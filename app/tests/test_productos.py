@@ -87,3 +87,27 @@ def test_update_producto():
 #     print(response.json())
 
 #     assert response.status_code == 200
+
+
+def test_buscar_productos():
+    unique_name = f"BuscarMe_{uuid.uuid4().hex[:6]}"
+    producto_data = {
+        "nombre": unique_name,
+        "categoria": "Didácticos Especiales",
+        "cantidad": 10,
+        "precio": 5000,
+        "fecha_registro": "2026-05-31"
+    }
+    client.post("/productos/", json=producto_data)
+
+    # Buscamos por nombre
+    response = client.get("/productos/", params={"nombre": unique_name})
+    assert response.status_code == 200
+    res_json = response.json()
+    assert len(res_json) == 1
+    assert res_json[0]["nombre"] == unique_name
+
+    # Buscamos por categoría
+    response_cat = client.get("/productos/", params={"categoria": "Didácticos Especiales"})
+    assert response_cat.status_code == 200
+    assert len(response_cat.json()) >= 1

@@ -1,15 +1,16 @@
-from sqlalchemy import Column, Integer, ForeignKey, DateTime
-from sqlalchemy.orm import relationship
-from datetime import datetime
+from sqlalchemy import Integer, ForeignKey, DateTime
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from datetime import datetime, timezone
 from app.db.database import Base
+from app.models.producto import Producto
 
 class Inventario(Base):
     __tablename__ = "inventarios"
 
-    id = Column(Integer, primary_key=True, index=True)
-    producto_id = Column(Integer, ForeignKey("productos.id", ondelete="CASCADE"), nullable=False)
-    cantidad = Column(Integer, nullable=False)  # Positivo si entra mercancía, negativo si sale
-    fecha_movimiento = Column(DateTime, default=datetime.utcnow)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    producto_id: Mapped[int] = mapped_column(Integer, ForeignKey("productos.id", ondelete="CASCADE"), nullable=False)
+    cantidad: Mapped[int] = mapped_column(Integer, nullable=False)  # Positivo si entra mercancía, negativo si sale
+    fecha_movimiento: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
 
     # Relación para saber qué producto se movió
-    producto = relationship("Producto")
+    producto: Mapped[Producto] = relationship("Producto")
