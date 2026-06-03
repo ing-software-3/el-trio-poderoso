@@ -11,4 +11,4 @@ bcrypt==4.0.1
 python-multipart==0.0.29
 pytest==9.0.3
 httpx==0.28.1
-
+ruff check . && mypy app && bandit  -r app && pytest -p no:warnings
