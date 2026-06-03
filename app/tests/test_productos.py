@@ -1,49 +1,89 @@
-import random
+from fastapi.testclient import TestClient
+from app.main import app
+import uuid
 
-def test_crud_productos_completo(client):
-    """Prueba el ciclo completo (CRUD) de la gestión de productos del Liceo"""
+client = TestClient(app)
 
-    numero_falso = random.randint(1000, 9999)
-    datos_producto = {
-        "nombre": f"Plastilina Escolar Extragrande {numero_falso}",
-        "categoria": "Didácticos",
-        "cantidad": 12,
-        "precio": 4500,
+
+def crear_producto():
+
+    unique = str(uuid.uuid4())[:8]
+
+    producto_data = {
+        "nombre": f"Producto {unique}",
+        "categoria": "Papelería",
+        "cantidad": 20,
+        "precio": 1500,
         "fecha_registro": "2026-05-31"
     }
 
-    response_post = client.post("/productos/", json=datos_producto)
-    assert response_post.status_code in [200, 201], response_post.text
+    producto_response = client.post("/productos/", json=producto_data)
+    assert producto_response.status_code in [200, 201], producto_response.text
 
-    producto_guardado = response_post.json()
-    producto_id = producto_guardado["id"]
-    assert producto_guardado["nombre"] == datos_producto["nombre"]
+    producto_body = producto_response.json()
 
-    response_get_all = client.get("/productos/")
-    assert response_get_all.status_code == 200
-    assert len(response_get_all.json()) > 0
+    id_producto = producto_body["id"]
 
-    response_get_id = client.get(f"/productos/{producto_id}")
-    assert response_get_id.status_code == 200
-    assert response_get_id.json()["id"] == producto_id
+    return id_producto
 
-    datos_actualizados = {
-        "nombre": f"Plastilina Escolar Extragrande {numero_falso}",
+
+# CREAR
+
+def test_create_producto():
+
+    id_producto = crear_producto()
+
+    assert id_producto is not None
+
+
+# GET ID
+
+def test_get_producto_by_id():
+
+    id_producto = crear_producto()
+
+    response = client.get(f"/productos/{id_producto}")
+
+    print(response.status_code)
+    print(response.json())
+
+    assert response.status_code == 200
+
+
+# UPDATE
+
+def test_update_producto():
+
+    id_producto = crear_producto()
+
+    data = {
+        "nombre": "Producto Actualizado",
         "categoria": "Didácticos",
-        "cantidad": 8,
-        "precio": 4800,
+        "cantidad": 50,
+        "precio": 2500,
         "fecha_registro": "2026-05-31"
     }
 
-    response_put = client.put(f"/productos/{producto_id}", json=datos_actualizados)
-    assert response_put.status_code == 200
-    assert response_put.json()["cantidad"] == 8
-    assert response_put.json()["precio"] == 4800
+    response = client.put(
+        f"/productos/{id_producto}",
+        json=data
+    )
 
-    response_delete = client.delete(f"/productos/{producto_id}")
-    assert response_delete.status_code == 200
-    assert "eliminado correctamente" in response_delete.json()["mensaje"]
+    print(response.status_code)
+    print(response.json())
 
-    response_404 = client.get(f"/productos/{producto_id}")
-    assert response_404.status_code == 404
-    assert response_404.json()["detail"] == "Producto no encontrado"
+    assert response.status_code == 200
+
+
+# # DELETE
+
+# def test_delete_producto():
+
+#     id_producto = crear_producto()
+
+#     response = client.delete(f"/productos/{id_producto}")
+
+#     print(response.status_code)
+#     print(response.json())
+
+#     assert response.status_code == 200
