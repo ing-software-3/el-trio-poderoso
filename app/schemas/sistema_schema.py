@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import List, Optional
 
 # Esquema para actualizar la configuración del sistema (PUT)
 class SistemaUpdate(BaseModel):
