@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Optional
 from datetime import date
 
 # Lo que enviamos desde Swagger para crear la alerta
