@@ -16,6 +16,6 @@
     mypy 
     bandit
     pytest-cov
-    type-python-jose
-    type-passlib
+    python-jose
+    passlib
     
